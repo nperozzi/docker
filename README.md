@@ -1,0 +1,1 @@
+This repo contains some exercises to help me learn how to use Docker.

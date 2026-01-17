@@ -1,0 +1,29 @@
+services:                     # Each entry under services becomes one container.
+                              # All services are automatically placed on the same private Docker network.
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    ports:
+      - "1883:1883"           # Exposes the port to the host machine. HOAST_PORT:CONTAINER_PORT
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf   # Creates a volume and copy the files to the container
+  
+  subscriber:
+    build: ./subscriber       # Builds an image using the Dockerfile in this path.
+    depends_on:               # Ensures that the dependencies start first.
+      - mosquitto
+
+  publisher:
+    build: ./publisher
+    depends_on:
+      - mosquitto
+      - subscriber
+
+# Implicit behaviour:
+#   1) Compose creates one private bridge network for the project.
+#   2) Docker runs an internal DNS server on the network. All containers have an IP address.
+#   3) Docker assigns private IP addresses.
+
+
+
+
