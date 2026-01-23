@@ -1,0 +1,29 @@
+services:
+  container_01:
+    image: python:3.12-slim
+    container_name: container_01
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "sleep infinity"
+    ports:
+      - "5000:5000"
+    networks:
+      - tcp_net
+
+  container_02:
+    image: python:3.12-slim
+    container_name: container_02
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "sleep infinity"
+    depends_on:
+      - container_01
+    networks:
+      - tcp_net
+
+networks:
+  tcp_net:
+    name: tcp_net
+    driver: bridge
